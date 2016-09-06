@@ -35,7 +35,6 @@
 		    asin = Math.asin,
 		    acos = Math.acos,
 		    rad = PI / 180,
-		    oneDayMinSec = 24*60*60*1000,
 		    sunrise;
 		    
 		var options = {};
@@ -87,12 +86,24 @@
 			//x.innerHTML = "T: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
 			var time = getTimes(new Date(), position.coords.latitude, position.coords.longitude);
 			sunrise = time.sunrise;
+                        if(sunrise > new Date){
+                            time = getTimes(getYesterdayDate(), position.coords.latitude, position.coords.longitude);
+                            sunrise = time.sunrise;
+                        }
 			if(options.showVipala){
 				window.setInterval(showClock,100);
 			}else{
 				window.setInterval(showClock,500);
 			}
 		}
+                
+                function getYesterdayDate(){
+                    var todayTimeStamp = +new Date; // Unix timestamp in milliseconds
+                    var oneDayTimeStamp = 1000 * 60 * 60 * 24; // Milliseconds in a day
+                    var diff = todayTimeStamp - oneDayTimeStamp;
+                    return  new Date(diff);
+                }
+                
 
 		function showError(error) {
 			switch(error.code) {
